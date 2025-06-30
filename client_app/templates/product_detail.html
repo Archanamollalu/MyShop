@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ product.name }} - Product Details</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 40px;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 28px;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #2b2e4a;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background-color: #22223b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  {% if product.product_image %}
+    <img src="{{ product.product_image.url }}" alt="{{ product.name }}">
+  {% else %}
+    <img src="{% static 'images/default-product.png' %}" alt="No image available">
+  {% endif %}
+
+  <h1>{{ product.name }}</h1>
+  <p><strong>Price:</strong> ₹{{ product.price }}</p>
+  <p><strong>Stock:</strong> {{ product.stock }}</p>
+  <p><strong>Category:</strong> {{ product.categ.name }}</p>
+  <p><strong>Description:</strong> {{ product.description }}</p>
+
+  <div class="action-row">
+    <a href="{% url 'home' %}" class="btn">← Back to Home</a>
+    <form action="{% url 'add_to_cart' product.id %}" method="post" style="margin: 0;">
+      {% csrf_token %}
+      <button type="submit" class="btn">Add to Cart</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

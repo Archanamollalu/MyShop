@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Orders</title>
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .orders-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px #0001;
+      padding: 32px 24px;
+    }
+    h2 {
+      text-align: center;
+      color: #2b2e4a;
+      margin-bottom: 28px;
+      letter-spacing: 1px;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 12px;
+    }
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+    }
+    th {
+      background: #2b2e4a;
+      color: #fff;
+      border-radius: 6px 6px 0 0;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    tr {
+      background: #f8f9fb;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 2px 8px #0001;
+      transition: box-shadow 0.2s;
+    }
+    tr:hover {
+      box-shadow: 0 4px 16px #0002;
+    }
+    .status-approved {
+      color: #219150;
+      font-weight: bold;
+      background: #e6f9ed;
+      padding: 6px 14px;
+      border-radius: 16px;
+      display: inline-block;
+    }
+    .status-pending {
+      color: #b36b00;
+      font-weight: bold;
+      background: #fff6e6;
+      padding: 6px 14px;
+      border-radius: 16px;
+      display: inline-block;
+    }
+    @media (max-width: 600px) {
+      .orders-container {
+        padding: 12px 2px;
+      }
+      th, td {
+        padding: 8px 4px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="orders-container">
+    <h2>My Orders</h2>
+    <table>
+      <tr>
+        <th>Order ID</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Message</th>
+      </tr>
+      {% for order in orders %}
+      <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          {% if order.status == "approved" %}
+            <span class="status-approved">Approved</span>
+          {% elif order.status == "pending" %}
+            <span class="status-pending">Pending</span>
+          {% else %}
+            <span>{{ order.status }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if order.status == "approved" %}
+            <span style="color: #219150;">Order Confirmed!</span>
+          {% elif order.status == "pending" %}
+            <span style="color: #b36b00;">Pending Approval</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" style="text-align:center; color:#888;">No orders found.</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</body>
+</html>

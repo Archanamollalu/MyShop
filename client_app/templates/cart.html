@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cart</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .cart-container { max-width: 700px; margin: 40px auto; background: #fff; padding: 24px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #2b2e4a; color: #fff; }
+        .total { font-weight: bold; }
+        .remove-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .remove-btn:hover {
+            background-color: darkred;
+        }
+        .buy-btn {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .buy-btn:hover {
+            background-color: darkgreen;
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h2>Your Cart</h2>
+        {% if cart_items %}
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+            </tr>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ item.product.price }}</td>
+                <td>₹{{ item.subtotal }}</td>
+                <td>
+                    <form method="post" action="{% url 'remove_from_cart' item.product.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="remove-btn">Remove</button>
+                    </form>
+                    <form method="get" action="{% url 'order_page' item.product.id %}" style="display:inline;">
+                        <button type="submit" class="buy-btn">Buy Now</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3" class="total">Total</td>
+                <td class="total">₹{{ total }}</td>
+                <td></td>
+            </tr>
+        </table>
+        {% else %}
+            <p>Your cart is empty.</p>
+        {% endif %}
+        <a href="{% url 'home' %}">Continue Shopping</a>
+    </div>
+</body>
+</html>

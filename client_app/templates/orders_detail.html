@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Details</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; }
+    .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 24px; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+    th { background: #2b2e4a; color: #fff; }
+    .btn-approve {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .approved {
+      color: green;
+      font-weight: bold;
+    }
+    .pending {
+      color: orange;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Order Details</h2>
+    <table>
+      <tr>
+        <th>Order ID</th>
+        <th>User</th>
+        <th>Address</th>
+        <th>Payment</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      {% for order in orders %}
+      <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.user }}</td>
+        <td>{{ order.address }}</td>
+        <td>{{ order.payment_method }}</td>
+        <td>{{ order.created_at }}</td>
+        <td>
+          {% if order.status == "approved" %}
+            <span class="approved">Approved</span>
+          {% else %}
+            <span class="pending">Pending</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if order.status == "pending" %}
+            <form method="post" action="{% url 'approve_order' order.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-approve">Approve</button>
+            </form>
+          {% else %}
+            <span class="approved">&#10003;</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">No orders found.</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</body>
+</html>
